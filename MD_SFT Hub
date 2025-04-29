@@ -1,0 +1,280 @@
+--==[ Load Rayfield UI ]==--
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+--==[ Create Window ]==--
+local Window = Rayfield:CreateWindow({
+    Name = "MD_SFT Hub",
+    LoadingTitle = "No More Dumb Key Systems",
+    LoadingSubtitle = "Made by MyDadsSoft",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = nil, -- Save file in workspace if nil
+        FileName = "MD_SFT_Hub_Config"
+    },
+    Discord = { -- Optional Discord Invite
+        Enabled = true,
+        Invite = "discord.gg/H5hvXMzN", -- Your discord server invite
+        RememberJoins = true
+    },
+    KeySystem = false, -- Disable annoying key systems
+    Logo = 9605261863, -- 🛑 YOUR LOGO AS IMAGE ID (replace this ID with your real asset)
+    Theme = "Dark",
+    Settings = {
+        Background = 2929919985, -- Cool background
+        TileSize = 100,
+        BackgroundColor = Color3.fromRGB(15, 15, 15),
+        Font = Enum.Font.GothamBold,
+        Topbar = true,
+    },
+})
+
+--==[ Create Tabs ]==--
+local mainTab = Window:CreateTab("🏠 Main")
+local farmingTab = Window:CreateTab("🌾 Farming")
+local playerModsTab = Window:CreateTab("🏃 Player Mods")
+local funTab = Window:CreateTab("🎉 Fun Stuff")
+local settingsTab = Window:CreateTab("⚙️ Settings")
+local creditsTab = Window:CreateTab("👥 Credits")
+
+--==[ Farming Tab ]==--
+local farmingSection = farmingTab:CreateSection("Farming Scripts")
+
+_G.autoChestFarm = false
+_G.autoSpinFarm = false
+_G.infiniteDominusPet = false
+
+farmingTab:CreateToggle({
+    Name = "💰 Chest Auto Farm",
+    CurrentValue = false,
+    SectionParent = farmingSection,
+    Flag = "ChestFarm",
+    Callback = function(Value)
+        _G.autoChestFarm = Value
+        task.spawn(function()
+            while _G.autoChestFarm do
+                task.wait(0)
+                game:GetService("ReplicatedStorage").Remotes.TreasureEvent:FireServer("Chest")
+            end
+        end)
+    end,
+})
+
+farmingTab:CreateToggle({
+    Name = "🎰 Unlimited Spins",
+    CurrentValue = false,
+    SectionParent = farmingSection,
+    Flag = "SpinFarm",
+    Callback = function(Value)
+        _G.autoSpinFarm = Value
+        task.spawn(function()
+            while _G.autoSpinFarm do
+                task.wait(0.5)
+                pcall(function()
+                    game:GetService("ReplicatedStorage").Remotes.SpinPrizeEvent:FireServer(3)
+                end)
+            end
+        end)
+    end,
+})
+
+farmingTab:CreateToggle({
+    Name = "🐲 Auto Triple Dominus",
+    CurrentValue = false,
+    SectionParent = farmingSection,
+    Flag = "DominusFarm",
+    Callback = function(Value)
+        _G.infiniteDominusPet = Value
+        task.spawn(function()
+            while _G.infiniteDominusPet do
+                task.wait(0.0)
+                game:GetService("ReplicatedStorage").Remotes.SpinPrizeEvent:FireServer(4)
+            end
+        end)
+    end,
+})
+
+farmingTab:CreateToggle({
+    Name = "💎 Auto Gem",
+    CurrentValue = false,
+    SectionParent = farmingSection,
+    Flag = "DominusFarm",
+    Callback = function(Value)
+        _G.infiniteDominusPet = Value
+        task.spawn(function()
+            while _G.infiniteDominusPet do
+                task.wait(0.0)
+                game:GetService("ReplicatedStorage").Remotes.SpinPrizeEvent:FireServer(5)
+            end
+        end)
+    end,
+})
+
+
+farmingTab:CreateToggle({
+    Name = "💎 Auto Cash",
+    CurrentValue = false,
+    SectionParent = farmingSection,
+    Flag = "DominusFarm",
+    Callback = function(Value)
+        _G.infiniteDominusPet = Value
+        task.spawn(function()
+            while _G.infiniteDominusPet do
+                task.wait(0.0)
+                game:GetService("ReplicatedStorage").Remotes.SpinPrizeEvent:FireServer(8)
+            end
+        end)
+    end,
+})
+
+
+--==[ Player Mods Tab ]==--
+local playerModsSection = playerModsTab:CreateSection("Player Enhancements")
+
+playerModsTab:CreateSlider({
+    Name = "🏃 WalkSpeed",
+    Range = {16, 200},
+    Increment = 1,
+    CurrentValue = 16,
+    SectionParent = playerModsSection,
+    Flag = "WalkSpeedSlider",
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    end,
+})
+
+playerModsTab:CreateSlider({
+    Name = "🦘 JumpPower",
+    Range = {50, 500},
+    Increment = 5,
+    CurrentValue = 50,
+    SectionParent = playerModsSection,
+    Flag = "JumpPowerSlider",
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+    end,
+})
+
+playerModsTab:CreateButton({
+    Name = "🔄 Reset Speed/Jump",
+    SectionParent = playerModsSection,
+    Callback = function()
+        local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = 16
+            humanoid.JumpPower = 50
+        end
+    end,
+})
+
+--==[ Fun Features Tab ]==--
+local funSection = funTab:CreateSection("Fun Features")
+
+local infiniteJumpEnabled = false
+local noclipEnabled = false
+local flyEnabled = false
+local flySpeed = 50
+
+funTab:CreateToggle({
+    Name = "🛸 Infinite Jump",
+    CurrentValue = false,
+    SectionParent = funSection,
+    Flag = "InfiniteJump",
+    Callback = function(Value)
+        infiniteJumpEnabled = Value
+    end,
+})
+
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if infiniteJumpEnabled then
+        local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+end)
+
+funTab:CreateToggle({
+    Name = "👻 Noclip (Walk Through Walls)",
+    CurrentValue = false,
+    SectionParent = funSection,
+    Flag = "Noclip",
+    Callback = function(Value)
+        noclipEnabled = Value
+    end,
+})
+
+game:GetService("RunService").Stepped:Connect(function()
+    if noclipEnabled then
+        for _, part in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+funTab:CreateToggle({
+    Name = "🚀 Fly Mode (WASD Control)",
+    CurrentValue = false,
+    SectionParent = funSection,
+    Flag = "FlyMode",
+    Callback = function(Value)
+        flyEnabled = Value
+
+        if flyEnabled then
+            local player = game.Players.LocalPlayer
+            local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+
+            local bodyGyro = Instance.new("BodyGyro", humanoidRootPart)
+            bodyGyro.P = 9e4
+            bodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+
+            local bodyVelocity = Instance.new("BodyVelocity", humanoidRootPart)
+            bodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+
+            local connection
+            connection = game:GetService("RunService").Heartbeat:Connect(function()
+                if not flyEnabled then
+                    bodyGyro:Destroy()
+                    bodyVelocity:Destroy()
+                    connection:Disconnect()
+                    return
+                end
+
+                bodyGyro.CFrame = workspace.CurrentCamera.CFrame
+                local newVelocity = Vector3.new(0, 0, 0)
+
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then
+                    newVelocity = newVelocity + (workspace.CurrentCamera.CFrame.LookVector * flySpeed)
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then
+                    newVelocity = newVelocity - (workspace.CurrentCamera.CFrame.LookVector * flySpeed)
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) then
+                    newVelocity = newVelocity - (workspace.CurrentCamera.CFrame.RightVector * flySpeed)
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) then
+                    newVelocity = newVelocity + (workspace.CurrentCamera.CFrame.RightVector * flySpeed)
+                end
+
+                bodyVelocity.Velocity = newVelocity
+            end)
+        end
+    end,
+})
+
+--==[ Settings Tab ]==--
+settingsTab:CreateButton({
+    Name = "🔄 Reset All Settings",
+    Callback = function()
+        Rayfield:Destroy()
+        task.wait(1)
+        loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+    end,
+})
+
+--==[ Credits Tab ]==--
+creditsTab:CreateLabel("Made with ❤️ by MyDadsSoft")
+creditsTab:CreateLabel("UI Framework: Rayfield (Sirius Project)")
+creditsTab:CreateLabel("Special thanks to you for using it!")
+
